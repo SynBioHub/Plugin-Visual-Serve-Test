@@ -15,9 +15,14 @@ def evaluate():
 def run():
     data = request.get_json(force=True)
     
-    url = data['complete_sbol'].replace('/sbol','')
-    instance = data['instanceUrl']
-    uri = data['top_level']
+    top_level_url = data['top_level']
+    complete_sbol = data['complete_sbol']
+    instance_url = data['instanceUrl']
+    size = data['size']
+    rdf_type = data['type']
+    shallow_sbol = data['shallow_sbol']
+    
+    url = complete_sbol.replace('/sbol','')
     
     cwd = os.getcwd()
     filename = os.path.join(cwd, "Test.html")
