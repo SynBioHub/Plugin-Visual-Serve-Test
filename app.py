@@ -27,13 +27,13 @@ def run():
         
         #this works if you can access the plugin via an exposed port on the internet.
         #Note that for synbiohub it must be https
-        #<img src="http://${hostAddr}/success.jpg" alt="Success">
+        #<img src="http://${hostAddr}/public/success.jpg" alt="Success">
         html_file = f"""<!doctype html>
                     	<html>
                     	<head><title>sequence view</title></head>
                     	<body>
                     	<div id="reactele"></div>
-                    	<img src="http://localhost:8088/success.jpg" alt="Success">
+                    	<img src="http://localhost:8088/public/success.jpg" alt="Success">
                     	<p>Host address: {hostAddr}</p>
                     	</body>
                     	</html>
@@ -44,7 +44,7 @@ def run():
         print(e)
         abort(404)
 
-@app.route("/<file_name>")
+@app.route("/public/<file_name>")
 def success(file_name):
     cwd = os.getcwd()
     path = os.path.join(cwd,'public')
