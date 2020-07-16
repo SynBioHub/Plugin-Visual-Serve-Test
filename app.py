@@ -42,7 +42,7 @@ def run():
         return html_file
     except Exception as e:
         print(e)
-        abort(404)
+        abort(400)
 
 @app.route("/public/<file_name>")
 def success(file_name):
