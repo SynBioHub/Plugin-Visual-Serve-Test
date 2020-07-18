@@ -1,4 +1,4 @@
-# Plugin-Visualisation-Test
+# Plugin-Visual-Serve-Test
 A small test plugin to test the serving of files. Could be the basis for python based serving visualisation plugins.
 
 # Install
