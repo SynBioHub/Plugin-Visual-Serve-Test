@@ -53,21 +53,32 @@ def run():
     
     try:
         hostAddr = request.headers.get('host')
-        
-        #this works if you can access the plugin via an exposed port on the internet.
-        #Note that for synbiohub it must be https
-        #<img src="http://${hostAddr}/public/success.jpg" alt="Success">
+
+        # determine SEQVIZ script URL (respect SEQVIZ_HOST env override)
+        override_host = os.environ.get('SERVER_HOST')
+        if override_host:
+            if override_host.startswith('http://') or override_host.startswith('https://'):
+                hostAddr = override_host.rstrip('/')
+            else:
+                hostAddr = 'http://' + override_host.rstrip('/')
+        else:
+            hostAddr = f'http://{hostAddr}'
+
+        # this works if you can access the plugin via an exposed port on the internet.
+        # Note that for synbiohub it must be https
+        # <img src="http://${hostAddr}/public/success.jpg" alt="Success">
         html_file = f"""<!doctype html>
-                    	<html>
-                    	<head><title>sequence view</title></head>
-                    	<body>
-                    	<div id="reactele"></div>
-                    	<img src="http://localhost:8088/public/success.jpg" alt="Success">
-                    	<p>Host address: {hostAddr}</p>
-                    	</body>
-                    	</html>
-                    	"""    
-            
+                    <html>
+                    <head><title>sequence view</title>
+                    <script src="{hostAddr + '/seqviz.js'}"></script></head>
+                    <body>
+                    <div id="reactele"></div>
+                    <img src="{hostAddr + '/public/success.jpg'}" alt="Success">
+                    <p>Host address: {hostAddr}</p>
+                    </body>
+                    </html>
+                    """    
+
         return html_file
     except Exception as e:
         print(e)
