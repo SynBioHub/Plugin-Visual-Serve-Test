@@ -1,5 +1,6 @@
 from flask import Flask, request, abort, jsonify
 import os, flask
+import requests
 
 app = Flask(__name__)
 
@@ -45,6 +46,9 @@ def run():
     size = data['size']
     rdf_type = data['type']
     shallow_sbol = data['shallow_sbol']
+    token = data['token']
+    if token is None:
+        token = 'null'
     
     url = complete_sbol.replace('/sbol','')
     
@@ -64,6 +68,11 @@ def run():
         else:
             hostAddr = f'http://{hostAddr}'
 
+        if token != 'null':
+            response = requests.get(url, headers={'Accept': 'text/plain', 'X-authorization': token })
+        else:
+            response = requests.get(url, headers={'Accept': 'text/plain' })
+
         # this works if you can access the plugin via an exposed port on the internet.
         # Note that for synbiohub it must be https
         # <img src="http://${hostAddr}/public/success.jpg" alt="Success">
@@ -72,6 +81,7 @@ def run():
                     <head><title>sequence view</title>
                     <script src="{hostAddr + '/seqviz.js'}"></script></head>
                     <body>
+                    <p>Response from {url}: {response.status_code}</p>
                     <div id="reactele"></div>
                     <img src="{hostAddr + '/public/success.jpg'}" alt="Success">
                     <p>Host address: {hostAddr}</p>
@@ -81,7 +91,7 @@ def run():
 
         return html_file
     except Exception as e:
-        print(e)
+        print(e, flush=True)
         abort(400)
 
 @app.route("/public/<file_name>")
